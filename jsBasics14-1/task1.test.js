@@ -60,6 +60,7 @@ describe("JSONPlaceholder POST API tests /posts", () => {
   });
 });
 
+
 describe("JSONPlaceholder POST API tests /comments", () => {
 
   test("POST /comments - should create new comment", async () => {
@@ -80,6 +81,38 @@ describe("JSONPlaceholder POST API tests /comments", () => {
     expect(response.data.email).toContain("@");
     expect(response.data.id).toEqual(expect.any(Number));
     expect(response.data.name).toEqual(expect.any(String));
+
+  });
+
+});
+
+//one more test, it's #5 as described in task
+describe("JSONPlaceholder GET API tests - posts by user", () => {
+
+  test("GET /posts?userId=1 should return posts for user with id 1", async () => {
+
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts",
+      {
+        params: {
+          userId: 1
+        }
+      }
+    );
+
+    expect(response.status).toBe(200);
+
+    expect(Array.isArray(response.data)).toBe(true);
+
+    expect(response.data.length).toBeGreaterThan(0);
+
+
+    response.data.forEach(post => {
+      expect(post.userId).toBe(1);
+      expect(post).toHaveProperty("id");
+      expect(post).toHaveProperty("title");
+      expect(post).toHaveProperty("body");
+    });
 
   });
 
